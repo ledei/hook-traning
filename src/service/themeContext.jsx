@@ -4,7 +4,12 @@ const ThemeContext = React.createContext();
 const ThemeUpdateContext = React.createContext();
 
 export function UseTheme() {
-  return useContext(ThemeContext);
+  const darkTheme = useContext(ThemeContext);
+  const themeStyle = {
+    backgroundColor: darkTheme ? "#333" : "#CCC",
+    color: darkTheme ? "#CCC" : "#333",
+  };
+  return themeStyle;
 }
 
 export function UseThemeUpdate() {

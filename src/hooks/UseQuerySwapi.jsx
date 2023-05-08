@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
 
-export function UseQuerySwapi(path) {
+export function UseQuerySwapi(path, page) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [data, setData] = useState(undefined);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
     setError(false);
-    const resultTimeoutId = setTimeout(async () => {
-      const data = await fetch(
-        `https://swapi.dev/api/people/?search=${path}`
-      ).then((resp) => resp.json());
 
-      if (data.count > 0) {
-        setData(data.results);
+    const resultTimeoutId = setTimeout(async () => {
+      let dataResult = undefined;
+      if (path === "") {
+        dataResult = await fetch(
+          `https://swapi.dev/api/people/?page=${page}`
+        ).then((resp) => resp.json());
+      } else {
+        dataResult = await fetch(
+          `https://swapi.dev/api/people/?search=${path}`
+        ).then((resp) => resp.json());
+      }
+
+      if (dataResult.count > 0) {
+        setData(dataResult.results);
       } else {
         setError(true);
       }
@@ -23,7 +31,7 @@ export function UseQuerySwapi(path) {
     }, 2000);
 
     return () => clearTimeout(resultTimeoutId);
-  }, [path]);
+  }, [path, page]);
 
   return { isLoading, error, data };
 }
